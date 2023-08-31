@@ -73,7 +73,8 @@ final class CustomCellMain: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        constraints()
+        addViews()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -81,12 +82,16 @@ final class CustomCellMain: UICollectionViewCell {
     }
 //MARK: -> private func
     
-    private func constraints() {
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+        verticalStack.topAnchor.constraint(equalTo: topAnchor),
+        verticalStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+        verticalStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+        verticalStack.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+    }
+    private func addViews() {
         addSubview(verticalStack)
-        verticalStack.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        verticalStack.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        verticalStack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        verticalStack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
 //MARK: -> fileprivate func
     
