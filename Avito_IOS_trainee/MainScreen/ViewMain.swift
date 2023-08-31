@@ -125,25 +125,8 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
         
         cell.itemImageView.image = nil
         
-//        func image(data: Data?) -> UIImage? {
-//          if let data = data {
-//            return UIImage(data: data)
-//          }
-//          return nil
-//        }
-        
-        
-        
         let viewModel  = itemModel[indexPath.row]
         
-//        if let url = URL(string: viewModel.image_url) {
-//            imageHelper.download(imageURL: url) { data, error in
-//                let img = image(data: data)
-//                DispatchQueue.main.async {
-//                    cell.itemImageView.image = img
-//                  }
-//            }
-//        }
         cell.configure(viewModel)
         return cell
     }
