@@ -10,15 +10,19 @@ import UIKit
 
 final class CustomCell: UICollectionViewCell {
     
-    private lazy var itemImageView: UIImageView = {
+     lazy var itemImageView: UIImageView = {
         let image = UIImageView()
-    
+         image.translatesAutoresizingMaskIntoConstraints = false
+         image.widthAnchor.constraint(equalToConstant: 180).isActive = true
+         image.heightAnchor.constraint(equalToConstant: 200).isActive = true
+         image.layer.cornerRadius = 7
+         image.clipsToBounds = true
         return image
     }()
     
     private lazy var itemTitle: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.numberOfLines = 0
         label.textColor = .black
         return label
@@ -26,7 +30,7 @@ final class CustomCell: UICollectionViewCell {
     
     private lazy var itemPrice: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.numberOfLines = 0
         label.textColor = .black
@@ -35,8 +39,8 @@ final class CustomCell: UICollectionViewCell {
     
     private lazy var itemLocation: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16, weight: .thin)
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 14, weight: .thin)
         label.numberOfLines = 0
         label.textColor = .black
         return label
@@ -45,8 +49,8 @@ final class CustomCell: UICollectionViewCell {
     
     private lazy var itemCreatedDate: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16, weight: .thin)
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 14, weight: .thin)
         label.numberOfLines = 0
         label.textColor = .black
         return label
@@ -54,7 +58,7 @@ final class CustomCell: UICollectionViewCell {
     
     private lazy var verticalStack: UIStackView = {
         let stack = UIStackView()
-        stack.alignment = .center
+        stack.alignment = .leading
         stack.axis = .vertical
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.addArrangedSubview(itemImageView)

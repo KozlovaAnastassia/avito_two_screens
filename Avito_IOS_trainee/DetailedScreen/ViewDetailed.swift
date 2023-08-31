@@ -17,9 +17,9 @@ class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
     private let headerId = "headerId"
     
     private var tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.estimatedSectionHeaderHeight = 200
+        tableView.backgroundColor = .white
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         return tableView
     }()
@@ -62,7 +62,7 @@ class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         NSLayoutConstraint.activate([
@@ -122,7 +122,7 @@ class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 400
+        return 430
     }
     
 //MARK: -> fileprivate func

@@ -11,6 +11,8 @@ import UIKit
 protocol NetworkServiceProtocol {
     func getDataAdvertisement(urlString: String, completion: @escaping (Result<Advertisement, Error>) -> Void)
     func getDataItemDetailed(urlString: String, completion: @escaping (Result<ModelItemDetailed, Error>) -> Void)
+    
+    
 }
 
 

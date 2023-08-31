@@ -18,6 +18,7 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     private var state: State?
     private var itemModel =  [ItemModel]()
     private let cellId = "cellId"
+    private let imageHelper = ImageHelper()
     
     private lazy var errorLabel: UILabel = {
        let label = UILabel()
@@ -61,10 +62,10 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
 //MARK: ->  private func
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            collectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            collectionView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 700),
-            collectionView.widthAnchor.constraint(equalToConstant: 350)
+            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -96,11 +97,13 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     func loadingScreeen() {
         collectionView.isHidden = true
         activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
     }
     
     func loadedScreeen() {
         collectionView.isHidden = false
         activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
         errorLabel.isHidden = true
     }
     
@@ -117,15 +120,37 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as? CustomCell
         else { return UICollectionViewCell() }
-    
+        
+        cell.itemImageView.image = nil
+        
+        func image(data: Data?) -> UIImage? {
+          if let data = data {
+            return UIImage(data: data)
+          }
+          return nil
+        }
+        
         let viewModel  = itemModel[indexPath.row]
+        
+        if let url = URL(string: viewModel.image_url) {
+            imageHelper.download(imageURL: url) { data, error in
+                let img = image(data: data)
+                DispatchQueue.main.async {
+                    cell.itemImageView.image = img
+                  }
+            }
+        }
         cell.configure(viewModel)
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-        return CGSize(width: frame.width/2.5, height: 200)
-   }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+          let flowayout = collectionViewLayout as? UICollectionViewFlowLayout
+          let space: CGFloat = (flowayout?.minimumInteritemSpacing ?? 0.0) + (flowayout?.sectionInset.left ?? 0.0) + (flowayout?.sectionInset.right ?? 0.0)
+          let size:CGFloat = (collectionView.frame.size.width - space) / 2.0
+          return CGSize(width: size, height: 310)
+      }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.delegate?.transit(indexPath: indexPath)

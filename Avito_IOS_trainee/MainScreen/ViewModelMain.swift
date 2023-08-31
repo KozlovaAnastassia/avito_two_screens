@@ -40,14 +40,12 @@ final class ViewModelMain: ViewModelMainProtocol  {
     
     func requestt(urlString: String){
         networkService.getDataAdvertisement(urlString: urlString) {  result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    self.data = response
-                    self.result?()
-                case .failure(_):
-                    self.error?()
-                }
+            switch result {
+            case .success(let response):
+                self.data = response
+                self.result?()
+            case .failure(_):
+                self.error?()
             }
         }
     }
