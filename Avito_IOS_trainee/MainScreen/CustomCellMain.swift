@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class CustomCell: UICollectionViewCell {
+final class CustomCellMain: UICollectionViewCell {
     
      lazy var itemImageView: UIImageView = {
         let image = UIImageView()

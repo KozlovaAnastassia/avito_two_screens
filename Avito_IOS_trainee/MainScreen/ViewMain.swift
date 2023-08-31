@@ -18,7 +18,6 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     private var state: State?
     private var itemModel =  [ItemModel]()
     private let cellId = "cellId"
-  //  private let imageHelper = ImageHelper()
     
     private lazy var errorLabel: UILabel = {
        let label = UILabel()
@@ -82,7 +81,7 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     private func setcollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(CustomCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(CustomCellMain.self, forCellWithReuseIdentifier: cellId)
     }
     private func addViews() {
         addSubview(errorLabel)
@@ -120,13 +119,11 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as? CustomCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as? CustomCellMain
         else { return UICollectionViewCell() }
         
         cell.itemImageView.image = nil
-        
         let viewModel  = itemModel[indexPath.row]
-        
         cell.configure(viewModel)
         return cell
     }
@@ -135,7 +132,6 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
             let width = (collectionView.frame.width - 30) / 2
             return CGSize(width: width, height: width + 120)
         }
-    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.delegate?.transit(indexPath: indexPath)

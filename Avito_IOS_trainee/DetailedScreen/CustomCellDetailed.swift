@@ -113,7 +113,7 @@ class CustomCellDetailed: UITableViewCell {
         NSLayoutConstraint.activate([
          verticalStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
          verticalStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-         verticalStack.topAnchor.constraint(equalTo: topAnchor)
+         verticalStack.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16)
         ])
     }
     

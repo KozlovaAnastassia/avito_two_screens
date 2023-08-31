@@ -39,7 +39,7 @@ class ViewControllerMain: UIViewController, ViewDelegate {
         viewModel.result = {
             self.myView.sentData(data: self.viewModel.data?.advertisements  ?? [])
             self.state = .loaded
-        }        
+        }
         
         viewModel.error = {
             self.state = .failure
