@@ -9,24 +9,23 @@ import Foundation
 import UIKit
 
 protocol NetworkServiceProtocol {
-    func getDataAdvertisement(urlString: String, completion: @escaping (Result<Advertisement, Error>) -> Void)
-    func getDataItemDetailed(urlString: String, completion: @escaping (Result<ModelItemDetailed, Error>) -> Void)
-    
-    
+    func getDataAdvertisement(urlString: String, completion: @escaping (Result<AdvertisementModel, Error>) -> Void)
+    func getDataItemDetailed(urlString: String, completion: @escaping (Result<DetailedItemModel, Error>) -> Void)
 }
-
 
 class NetworkService: NetworkServiceProtocol {
     
-    func getDataAdvertisement(urlString: String, completion: @escaping (Result<Advertisement, Error>) -> Void) {
+    func getDataAdvertisement(urlString: String, completion: @escaping (Result<AdvertisementModel, Error>) -> Void) {
         request(urlString: urlString, completion: completion)
     }
-    func getDataItemDetailed(urlString: String, completion: @escaping (Result<ModelItemDetailed, Error>) -> Void) {
+    func getDataItemDetailed(urlString: String, completion: @escaping (Result<DetailedItemModel, Error>) -> Void) {
         request(urlString: urlString, completion: completion)
     }
     
     private func request<T: Decodable>(urlString: String, completion: @escaping (Result<T, Error>) -> Void ) {
+        
         guard let url = URL(string: urlString) else {return}
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {

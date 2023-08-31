@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.windowScene = windowScene
         window?.makeKeyAndVisible()
-        let vc = ViewControllerMain(viewModel: ViewModelMain(networkService: NetworkService()))
+        let vc = MainViewController(viewModel: MainViewModel(networkService: NetworkService()))
         window?.rootViewController = UINavigationController(rootViewController: vc)
     }
 

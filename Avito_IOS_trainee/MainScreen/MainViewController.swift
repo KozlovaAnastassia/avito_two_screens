@@ -7,48 +7,46 @@
 
 import UIKit
 
-class ViewControllerMain: UIViewController, ViewDelegate {
+class MainViewController: UIViewController, ViewDelegate {
     
-    private let myView = View()
-    private var viewModel: ViewModelMainProtocol
+    private let mainView = MainView()
+    private var viewModel: MainViewModelProtocol
     private let urlString =
     "https://www.avito.st/s/interns-ios/main-page.json"
     
     private var state: State = .plain {
         didSet {
             switch state  {
-            case .failure: myView.failureScreeen()
-            case .loading: myView.loadingScreeen()
-            case .loaded:  myView.loadedScreeen()
-            default:  myView.loadingScreeen()
+            case .failure: mainView.failureScreeen()
+            case .loading: mainView.loadingScreeen()
+            case .loaded:  mainView.loadedScreeen()
+            default:  mainView.loadingScreeen()
             }
         }
     }
-//MARK: ->  loadView
+    
     override func loadView() {
         super.loadView()
-        view = myView
+        view = mainView
     }
         
-//MARK: ->  viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         state = .loading
         viewModel.requestt(urlString: urlString)
         
-        viewModel.result = {
-            self.myView.sentData(data: self.viewModel.data?.advertisements  ?? [])
-            self.state = .loaded
+        viewModel.result = {  [weak self] in
+            self?.state = .loaded
+            self?.mainView.reloadCollectionView()
         }
         
         viewModel.error = {
             self.state = .failure
         }
-        myView.delegate = self
+        mainView.delegate = self
     }
     
-//MARK: ->  init
-    init(viewModel: ViewModelMainProtocol) {
+    init(viewModel: MainViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -57,10 +55,19 @@ class ViewControllerMain: UIViewController, ViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-//MARK: -> fileprivate func
-    func transit(indexPath: IndexPath) {
+    func getIncomeForCell(indexPath: IndexPath) -> ItemModel {
+        viewModel.getIncomeForCell(indexPath: indexPath)
+    }
+    
+    func getNumbersOfSection() -> Int {
+        viewModel.numberOfRowsInSection
+    }
+    
+    func pushToDetailController(indexPath: IndexPath) {
         let vc2 = viewModel.didSelectedCell(indexPath)
         navigationController?.pushViewController(vc2, animated: true)
     }
+    
+  
 }
 

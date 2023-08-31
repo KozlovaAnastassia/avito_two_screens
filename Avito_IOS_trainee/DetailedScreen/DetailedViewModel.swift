@@ -5,25 +5,25 @@
 //  Created by Анастасия on 30.08.2023.
 //
 
-import Foundation
 import UIKit
 
-protocol ViewModelDetailedProtocol {
-    var data: ModelItemDetailed? {get}
-    var result: ((ModelItemDetailed) -> Void)? {get set}
+protocol DetailedViewModelProtocol {
+    var result: (() -> Void)? {get set}
     var error: (() -> Void)? {get set}
-    var networkService: NetworkServiceProtocol {get set}
+    
     func request(urlString: String)
+    func getDataForCell() -> DetailedItemModel?
+    func getviewForHeaderInSection() -> String
 }
 
-final class ViewModelDetailed: ViewModelDetailedProtocol  {
-
-    var networkService: NetworkServiceProtocol
-    var data: ModelItemDetailed?
-    var result: ((ModelItemDetailed) -> Void)?
+final class DetailedViewModel: DetailedViewModelProtocol  {
+    
+    private var data: DetailedItemModel?
+    private var networkService: NetworkServiceProtocol
+    var result: (() -> Void)?
     var error: (() -> Void)?
     
-    init ( networkService: NetworkServiceProtocol) {
+    init (networkService: NetworkServiceProtocol) {
         self.networkService = networkService
     }
     
@@ -33,11 +33,20 @@ final class ViewModelDetailed: ViewModelDetailedProtocol  {
                 switch result {
                 case .success(let response):
                     self.data = response
-                    self.result?(response)
+                    self.result?()
                 case .failure(_):
                     self.error?()
                 }
             }
         }
     }
+    
+    func getDataForCell() -> DetailedItemModel? {
+        data
+    }
+    
+    func getviewForHeaderInSection() -> String {
+        data?.image_url ?? String()
+    }
 }
+

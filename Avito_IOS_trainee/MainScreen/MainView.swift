@@ -9,14 +9,15 @@ import Foundation
 import UIKit
 
 protocol ViewDelegate: AnyObject {
-    func transit(indexPath: IndexPath)
+    func getIncomeForCell(indexPath: IndexPath) -> ItemModel
+    func getNumbersOfSection() -> Int
+    func pushToDetailController(indexPath: IndexPath)
 }
 
-class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class MainView: UIView {
     
     weak var delegate: ViewDelegate?
     private var state: State?
-    private var itemModel =  [ItemModel]()
     private let cellId = "cellId"
     
     private lazy var errorLabel: UILabel = {
@@ -81,14 +82,13 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
     private func setcollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(CustomCellMain.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(MainCustomCell.self, forCellWithReuseIdentifier: cellId)
     }
     private func addViews() {
         addSubview(errorLabel)
         addSubview(activityIndicator)
         addSubview(collectionView)
     }
-//MARK: -> fileprivate func
     
     func failureScreeen() {
         collectionView.isHidden = true
@@ -108,22 +108,21 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
         errorLabel.isHidden = true
     }
     
-    func sentData(data: [ItemModel]) {
-        self.itemModel = data
+    func reloadCollectionView() {
         collectionView.reloadData()
     }
+}
+
+extension MainView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-//MARK: -> collectionView func
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        itemModel.count
+        delegate?.getNumbersOfSection() ?? Int()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as? CustomCellMain
-        else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MainCustomCell else { return UICollectionViewCell()}
         
-        cell.itemImageView.image = nil
-        let viewModel  = itemModel[indexPath.row]
+        guard let viewModel  = delegate?.getIncomeForCell(indexPath: indexPath) else { return cell}
         cell.configure(viewModel)
         return cell
     }
@@ -134,6 +133,8 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
         }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.delegate?.transit(indexPath: indexPath)
+        self.delegate?.pushToDetailController(indexPath: indexPath)
     }
+    
+
 }

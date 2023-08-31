@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-final class CustomCellMain: UICollectionViewCell {
+final class MainCustomCell: UICollectionViewCell {
     
-     lazy var itemImageView: UIImageView = {
+    private lazy var itemImageView: UIImageView = {
         let image = UIImageView()
          image.translatesAutoresizingMaskIntoConstraints = false
          image.widthAnchor.constraint(equalToConstant: 180).isActive = true
@@ -80,7 +80,6 @@ final class CustomCellMain: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-//MARK: -> private func
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
@@ -93,15 +92,15 @@ final class CustomCellMain: UICollectionViewCell {
     private func addViews() {
         addSubview(verticalStack)
     }
-//MARK: -> fileprivate func
+
     
     func configure(_ viewModel: ItemModel) {
         itemImageView.image = nil
-        itemImageView.loadImage(withURL: viewModel.image_url, placeholder: UIImage(named: "placeholder"))
+        itemImageView.loadImage(withURL: viewModel.image_url, placeholder: UIImage(named: "placeholder"), id: viewModel.id)
         itemTitle.text = viewModel.title
         itemPrice.text = viewModel.price
         itemLocation.text = viewModel.location
         itemCreatedDate.text = viewModel.created_date
     }
-
+    
 }

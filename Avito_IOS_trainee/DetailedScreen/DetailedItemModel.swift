@@ -5,9 +5,7 @@
 //  Created by Анастасия on 29.08.2023.
 //
 
-import Foundation
 import UIKit
-
 
 struct DetailedItemModel: Codable {
     let id: String

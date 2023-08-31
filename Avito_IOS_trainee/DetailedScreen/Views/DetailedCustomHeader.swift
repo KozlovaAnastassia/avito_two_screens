@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CustomHeaderDetailed: UITableViewHeaderFooterView {
+class DetailedCustomHeader: UITableViewHeaderFooterView {
     
     private lazy var itemImageView: UIImageView = {
        let imageView = UIImageView()
@@ -17,7 +17,6 @@ class CustomHeaderDetailed: UITableViewHeaderFooterView {
        return imageView
    }()
     
-//MARK: ->  init
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         addViews()
@@ -27,7 +26,7 @@ class CustomHeaderDetailed: UITableViewHeaderFooterView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-//MARK: -> private func
+
     private func addViews() {
         addSubview(itemImageView)
     }
@@ -41,8 +40,7 @@ class CustomHeaderDetailed: UITableViewHeaderFooterView {
         ])
     }
     
-//MARK: -> func
-     func config(_ image: String) {
-         itemImageView.loadImage(withURL: image, placeholder: UIImage(named: "placeholder"))
+    func config(_ image: String, id: String) {
+        itemImageView.loadImage(withURL: image, placeholder: UIImage(named: "placeholder"), id: id)
      }
 }

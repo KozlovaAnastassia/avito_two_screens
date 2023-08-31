@@ -8,22 +8,21 @@
 import Foundation
 import UIKit
 
-protocol ViewModelMainProtocol {
-    var data: Advertisement? {get}
+protocol MainViewModelProtocol {
     var result: (() -> Void)? {get set}
     var error: (() -> Void)? {get set}
     var numberOfRowsInSection: Int {get}
-    var networkService: NetworkServiceProtocol {get set}
     
-    func didSelectedCell(_ indexPath: IndexPath) -> ViewControllerDetailed
+    func didSelectedCell(_ indexPath: IndexPath) -> DetailedViewController
     func requestt(urlString: String)
+    func getIncomeForCell(indexPath: IndexPath) -> ItemModel
 }
 
-final class ViewModelMain: ViewModelMainProtocol  {
+final class MainViewModel: MainViewModelProtocol  {
 
-    var networkService: NetworkServiceProtocol
-    var data: Advertisement?
-    var numberOfRowsInSection: Int {return self.data?.advertisements.count   ?? 0 }
+    private var networkService: NetworkServiceProtocol
+    private var data: AdvertisementModel?
+    var numberOfRowsInSection: Int {return self.data?.advertisements.count ?? Int()}
     var result: (() -> Void)?
     var error: (() -> Void)?
     
@@ -31,11 +30,11 @@ final class ViewModelMain: ViewModelMainProtocol  {
         self.networkService = networkService
     }
     
-    func didSelectedCell(_ indexPath: IndexPath) -> ViewControllerDetailed {
-        let vc2 = ViewControllerDetailed(viewModel: ViewModelDetailed(networkService: networkService))
+    func didSelectedCell(_ indexPath: IndexPath) -> DetailedViewController {
+        let vc2 = DetailedViewController(viewModel: DetailedViewModel(networkService: networkService))
         let id = data?.advertisements[indexPath.row].id ?? String()
         vc2?.getID(id: id)
-        return vc2 as! ViewControllerDetailed
+        return vc2!
     }
     
     func requestt(urlString: String){
@@ -48,5 +47,9 @@ final class ViewModelMain: ViewModelMainProtocol  {
                 self.error?()
             }
         }
+    }
+    
+    func getIncomeForCell(indexPath: IndexPath) -> ItemModel {
+        (data?.advertisements[indexPath.row])!
     }
 }

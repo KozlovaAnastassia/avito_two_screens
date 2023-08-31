@@ -8,13 +8,17 @@
 import Foundation
 import UIKit
 
-class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
-    
+protocol DetailedViewDelegate: AnyObject {
+    func getDataForCell() -> DetailedItemModel?
+    func getviewForHeaderInSection() -> String
+}
+
+class DetailedView: UIView {
  
     private var state: State?
-    private var itemModel: ModelItemDetailed?
     private let cellId = "cellId2"
     private let headerId = "headerId"
+    weak var delegate: DetailedViewDelegate?
     
     private var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -44,20 +48,23 @@ class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
 //MARK: -> init
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        backgroundColor = .white
         
-        addSubview(errorLabel)
-        addSubview(activityIndicator)
-        addSubview(tableView)
+        backgroundColor = .white
+        addSubviews()
+        setTableView()
         setConstraints()
-        setView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-//MARK: -> private func
+    private func addSubviews() {
+        addSubview(errorLabel)
+        addSubview(activityIndicator)
+        addSubview(tableView)
+    }
+    
     private func setConstraints() {
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -75,57 +82,16 @@ class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
         ])
     }
 
-    func setView() {
+    private func setTableView() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(CustomCellDetailed.self, forCellReuseIdentifier: cellId)
-       
+        tableView.register(DetailedCustomCell.self, forCellReuseIdentifier: cellId)
     }
     
-    func sentData(data: ModelItemDetailed) {
-        self.itemModel = data
+    func reloadTableView() {
         tableView.reloadData()
     }
-   
-//MARK: ->  tableView func
-     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return 1
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
 
-     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellId2", for: indexPath) as? CustomCellDetailed
-         else { return UITableViewCell() }
-         
-         if let viewModel  = itemModel {
-             cell.configure(viewModel)
-         }
-         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = CustomHeaderDetailed()
-        
-        if let image  = itemModel?.image_url {
-            header.config(image)
-        }
-        return header
-    }
-    
-     func tableView(_ tableView: UITableView,
-               heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 430
-    }
-    
-//MARK: -> fileprivate func
     func failureScreeen() {
         tableView.isHidden = true
         errorLabel.isHidden = false
@@ -143,4 +109,39 @@ class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension DetailedView: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+   }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? DetailedCustomCell
+        else { return UITableViewCell() }
+        
+        if let viewModel  = delegate?.getDataForCell() {
+            cell.configure(viewModel)
+        }
+        return cell
+   }
+   
+   func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+       let header = DetailedCustomHeader()
+       if let image  = delegate?.getviewForHeaderInSection() {
+           header.config(image, id: delegate?.getDataForCell()?.id ?? String())
+       }
+       return header
+   }
+   
+    func tableView(_ tableView: UITableView,
+              heightForRowAt indexPath: IndexPath) -> CGFloat {
+       return 300
+   }
+   
+   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+       return 430
+   }
+   
+}
 

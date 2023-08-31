@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-struct Advertisement: Codable {
+struct AdvertisementModel: Codable {
     let advertisements: [ItemModel]
 }
 

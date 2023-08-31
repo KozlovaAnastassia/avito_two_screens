@@ -8,9 +8,7 @@
 import Foundation
 import UIKit
 
-class CustomCellDetailed: UITableViewCell {
-    
-    private var itemDetailedModel =  [ModelItemDetailed]()
+final class DetailedCustomCell: UITableViewCell {
    
     private lazy var itemTitle: UILabel = {
        let label = UILabel()
@@ -94,7 +92,6 @@ class CustomCellDetailed: UITableViewCell {
        return stack
    }()
    
-//MARK: ->  init
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
        super.init(style: style, reuseIdentifier: reuseIdentifier)
        addViews()
@@ -104,7 +101,7 @@ class CustomCellDetailed: UITableViewCell {
    required init?(coder: NSCoder) {
        fatalError("init(coder:) has not been implemented")
    }
-//MARK: ->  private func
+    
    private func addViews() {
        addSubview(verticalStack)
    }
@@ -117,8 +114,7 @@ class CustomCellDetailed: UITableViewCell {
         ])
     }
     
-//MARK: -> fileprivate func
-     func configure(_ viewModel: ModelItemDetailed) {
+     func configure(_ viewModel: DetailedItemModel) {
          itemTitle.text = viewModel.title
          itemPrice.text = viewModel.price
          itemLocation.text = viewModel.location

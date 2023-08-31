@@ -8,52 +8,48 @@
 import Foundation
 import UIKit
 
-class ViewControllerDetailed: UIViewController {
+class DetailedViewController: UIViewController, DetailedViewDelegate {
     
-    private let myView = ViewDetailed()
-    private var viewModel: ViewModelDetailedProtocol
+    private let detailedView = DetailedView()
+    private var viewModel: DetailedViewModelProtocol
     private var itemID = String()
     
     private var state: State = .plain {
         didSet {
             switch state  {
-            case .failure: myView.failureScreeen()
-            case .loading: myView.loadingScreeen()
-            case .loaded:  myView.loadedScreeen()
-            default:  myView.loadingScreeen()
+            case .failure: detailedView.failureScreeen()
+            case .loading: detailedView.loadingScreeen()
+            case .loaded:  detailedView.loadedScreeen()
+            default:  detailedView.loadingScreeen()
             }
         }
     }
     
-//MARK: -> loadView
     override func loadView() {
         super.loadView()
-        view = myView
+        view = detailedView
     }
     
-//MARK: -> viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
         state = .loading
+        detailedView.delegate = self
         let urlString =
         "https://www.avito.st/s/interns-ios/details/\(itemID).json"
         
         viewModel.request(urlString: urlString)
         
-        viewModel.result = { data in
-            self.state = .loaded
-            self.myView.sentData(data: data)
-            
+        viewModel.result = { [weak self] in
+            self?.state = .loaded
+            self?.detailedView.reloadTableView()
         }
         viewModel.error = {
             self.state = .failure
         }
     }
  
-//MARK: -> init
-    init?(viewModel: ViewModelDetailedProtocol) {
+    init?(viewModel: DetailedViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,8 +57,16 @@ class ViewControllerDetailed: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-//MARK: -> fileprivate func
+    
     func getID(id: String) {
         self.itemID = id 
+    }
+    
+    func getDataForCell() -> DetailedItemModel? {
+        viewModel.getDataForCell()
+    }
+    
+    func getviewForHeaderInSection() -> String {
+        viewModel.getviewForHeaderInSection()
     }
 }
