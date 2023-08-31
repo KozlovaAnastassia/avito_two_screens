@@ -92,7 +92,7 @@ final class CustomCell: UICollectionViewCell {
     
     func configure(_ viewModel: ItemModel) {
         itemImageView.image = nil
-        itemImageView.imageFromServerURL(viewModel.image_url)
+        itemImageView.loadImage(withURL: viewModel.image_url, placeholder: UIImage(named: "placeholder"))
         itemTitle.text = viewModel.title
         itemPrice.text = viewModel.price
         itemLocation.text = viewModel.location

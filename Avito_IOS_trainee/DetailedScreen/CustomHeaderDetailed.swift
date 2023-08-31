@@ -43,6 +43,6 @@ class CustomHeaderDetailed: UITableViewHeaderFooterView {
     
 //MARK: -> func
      func config(_ image: String) {
-         self.itemImageView.imageFromServerURL(image)
+         itemImageView.loadImage(withURL: image, placeholder: UIImage(named: "placeholder"))
      }
 }
