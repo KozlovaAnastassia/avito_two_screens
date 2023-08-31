@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol MainViewModelProtocol {
+protocol ViewModelMainProtocol {
     var data: Advertisement? {get}
     var result: (() -> Void)? {get set}
     var error: (() -> Void)? {get set}
@@ -19,8 +19,7 @@ protocol MainViewModelProtocol {
     func requestt(urlString: String)
 }
 
-
-final class MainViewModel: MainViewModelProtocol  {
+final class ViewModelMain: ViewModelMainProtocol  {
 
     var networkService: NetworkServiceProtocol
     var data: Advertisement?

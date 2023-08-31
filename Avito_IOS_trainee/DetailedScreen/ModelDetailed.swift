@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-struct ItemDetailedModel: Codable {
+struct ModelItemDetailed: Codable {
     let id: String
     let title: String
     let price: String

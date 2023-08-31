@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 protocol ViewModelDetailedProtocol {
-    var data: ItemDetailedModel? {get}
-    var result: (() -> Void)? {get set}
+    var data: ModelItemDetailed? {get}
+    var result: ((ModelItemDetailed) -> Void)? {get set}
     var error: (() -> Void)? {get set}
     var networkService: NetworkServiceProtocol {get set}
     func request(urlString: String)
@@ -19,8 +19,8 @@ protocol ViewModelDetailedProtocol {
 final class ViewModelDetailed: ViewModelDetailedProtocol  {
 
     var networkService: NetworkServiceProtocol
-    var data: ItemDetailedModel?
-    var result: (() -> Void)?
+    var data: ModelItemDetailed?
+    var result: ((ModelItemDetailed) -> Void)?
     var error: (() -> Void)?
     
     init ( networkService: NetworkServiceProtocol) {
@@ -33,9 +33,9 @@ final class ViewModelDetailed: ViewModelDetailedProtocol  {
                 switch result {
                 case .success(let response):
                     self.data = response
-                    self.result?()
-                case .failure(let error):
-                    print("error", error)
+                    self.result?(response)
+                case .failure(_):
+                    self.error?()
                 }
             }
         }

@@ -12,6 +12,7 @@ final class CustomCell: UICollectionViewCell {
     
     private lazy var itemImageView: UIImageView = {
         let image = UIImageView()
+    
         return image
     }()
     
@@ -26,7 +27,8 @@ final class CustomCell: UICollectionViewCell {
     private lazy var itemPrice: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-         label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
+        label.numberOfLines = 0
         label.textColor = .black
         return label
     }()
@@ -34,6 +36,7 @@ final class CustomCell: UICollectionViewCell {
     private lazy var itemLocation: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16, weight: .thin)
         label.numberOfLines = 0
         label.textColor = .black
         return label
@@ -43,6 +46,7 @@ final class CustomCell: UICollectionViewCell {
     private lazy var itemCreatedDate: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16, weight: .thin)
         label.numberOfLines = 0
         label.textColor = .black
         return label
@@ -61,6 +65,7 @@ final class CustomCell: UICollectionViewCell {
         return stack
     }()
     
+//MARK: -> init
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -70,6 +75,7 @@ final class CustomCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+//MARK: -> private func
     
     private func constraints() {
         addSubview(verticalStack)
@@ -78,6 +84,7 @@ final class CustomCell: UICollectionViewCell {
         verticalStack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         verticalStack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
+//MARK: -> fileprivate func
     
     func configure(_ viewModel: ItemModel) {
         itemImageView.image = nil

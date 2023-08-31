@@ -30,6 +30,5 @@ extension  UIImageView {
                 }
             }
         }
-         
-      }
+    }
 }

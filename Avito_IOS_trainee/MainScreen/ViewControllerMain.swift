@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ViewController: UIViewController, ViewDelegate {
+class ViewControllerMain: UIViewController, ViewDelegate {
     
     private let myView = View()
-    private var viewModel: MainViewModelProtocol
+    private var viewModel: ViewModelMainProtocol
     private let urlString =
     "https://www.avito.st/s/interns-ios/main-page.json"
     
@@ -24,7 +24,13 @@ class ViewController: UIViewController, ViewDelegate {
             }
         }
     }
-
+//MARK: ->  loadView
+    override func loadView() {
+        super.loadView()
+        view = myView
+    }
+        
+//MARK: ->  viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         state = .loading
@@ -40,13 +46,9 @@ class ViewController: UIViewController, ViewDelegate {
         }
         myView.delegate = self
     }
-
-    override func loadView() {
-        super.loadView()
-        view = myView
-    }
     
-    init(viewModel: MainViewModelProtocol) {
+//MARK: ->  init
+    init(viewModel: ViewModelMainProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -55,6 +57,7 @@ class ViewController: UIViewController, ViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+//MARK: -> fileprivate func
     func transit(indexPath: IndexPath) {
         let vc2 = viewModel.didSelectedCell(indexPath)
         navigationController?.pushViewController(vc2, animated: true)

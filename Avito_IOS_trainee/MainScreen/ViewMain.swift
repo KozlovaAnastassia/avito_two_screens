@@ -45,22 +45,20 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
         return collectionView
     }()
     
-    
+//MARK: ->  init
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
-        
-        addSubview(errorLabel)
-        addSubview(activityIndicator)
-        addSubview(collectionView)
+        addViews()
         setConstraints()
-        setView()
+        setcollectionView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+ 
+//MARK: ->  private func
     private func setConstraints() {
         NSLayoutConstraint.activate([
             collectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -78,11 +76,17 @@ class View: UIView,  UICollectionViewDataSource, UICollectionViewDelegate, UICol
         ])
     }
 
-    func setView() {
+    private func setcollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(CustomCell.self, forCellWithReuseIdentifier: cellId)
     }
+    private func addViews() {
+        addSubview(errorLabel)
+        addSubview(activityIndicator)
+        addSubview(collectionView)
+    }
+//MARK: -> fileprivate func
     
     func failureScreeen() {
         collectionView.isHidden = true

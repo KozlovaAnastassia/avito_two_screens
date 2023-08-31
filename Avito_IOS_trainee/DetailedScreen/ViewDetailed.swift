@@ -8,16 +8,21 @@
 import Foundation
 import UIKit
 
-class ViewDetailed: UIView {
+class ViewDetailed: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    private var itemDetailedModel =  [ItemDetailedModel]()
+ 
+    private var state: State?
+    private var itemModel: ModelItemDetailed?
+    private let cellId = "cellId2"
+    private let headerId = "headerId"
     
-    private lazy var itemImageView: UIImageView = {
-       let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-       
-       return imageView
-   }()
+    private var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.estimatedSectionHeaderHeight = 200
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        return tableView
+    }()
     
     private lazy var errorLabel: UILabel = {
        let label = UILabel()
@@ -35,134 +40,107 @@ class ViewDetailed: UIView {
         indicator.isHidden = true
         return indicator
     }()
-   
-    private lazy var itemTitle: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
-   
-    private lazy var itemPrice: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-        label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
-   
-    private lazy var itemLocation: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
- 
-   
-    private lazy var itemCreatedDate: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
     
-    private lazy var itemDescription: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
+//MARK: -> init
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        backgroundColor = .white
+        
+        addSubview(errorLabel)
+        addSubview(activityIndicator)
+        addSubview(tableView)
+        setConstraints()
+        setView()
+    }
     
-    private lazy var personEmail: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    private lazy var personPhoneNumber: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
-    
-    private lazy var personAddress: UILabel = {
-       let label = UILabel()
-       label.textAlignment = .center
-       label.numberOfLines = 0
-       label.textColor = .black
-       return label
-   }()
-   
-   private lazy var verticalStack: UIStackView = {
-       let stack = UIStackView()
-       stack.alignment = .center
-       stack.axis = .vertical
-       stack.translatesAutoresizingMaskIntoConstraints = false
-       stack.addArrangedSubview(itemImageView)
-       stack.addArrangedSubview(itemTitle)
-       stack.addArrangedSubview(itemPrice)
-       stack.addArrangedSubview(itemLocation)
-       stack.addArrangedSubview(itemCreatedDate)
-       stack.addArrangedSubview(personEmail)
-       stack.addArrangedSubview(personPhoneNumber)
-       stack.addArrangedSubview(personAddress)
-       return stack
-   }()
-   
+//MARK: -> private func
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+        NSLayoutConstraint.activate([
+            errorLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            errorLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+    }
 
-   override init(frame: CGRect) {
-       super.init(frame: .zero)
-       constraints()
-   }
-   
-   required init?(coder: NSCoder) {
-       fatalError("init(coder:) has not been implemented")
-   }
-   
-   private func constraints() {
-       addSubview(verticalStack)
-       verticalStack.topAnchor.constraint(equalTo: topAnchor).isActive = true
-       verticalStack.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-       verticalStack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-       verticalStack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-   }
+    func setView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(CustomCellDetailed.self, forCellReuseIdentifier: cellId)
+       
+    }
     
+    func sentData(data: ModelItemDetailed) {
+        self.itemModel = data
+        tableView.reloadData()
+    }
+   
+//MARK: ->  tableView func
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+         return 1
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellId2", for: indexPath) as? CustomCellDetailed
+         else { return UITableViewCell() }
+         
+         if let viewModel  = itemModel {
+             cell.configure(viewModel)
+         }
+         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = CustomHeaderDetailed()
+        
+        if let image  = itemModel?.image_url {
+            header.config(image)
+        }
+        return header
+    }
+    
+     func tableView(_ tableView: UITableView,
+               heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 300
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 400
+    }
+    
+//MARK: -> fileprivate func
     func failureScreeen() {
-        verticalStack.isHidden = true
+        tableView.isHidden = true
         errorLabel.isHidden = false
     }
     
     func loadingScreeen() {
-        verticalStack.isHidden = true
+        tableView.isHidden = true
         activityIndicator.isHidden = false
     }
     
     func loadedScreeen() {
-        verticalStack.isHidden = false
+        tableView.isHidden = false
         activityIndicator.isHidden = true
         errorLabel.isHidden = true
     }
-   
-    func sentData(image: String, title: String, price: String, location: String, createdDate: String, description: String, email: String, address: String, phoneNumber: String ) {
-        self.itemImageView.imageFromServerURL(image)
-        self.itemTitle.text = title
-        self.itemPrice.text = price
-        self.itemLocation.text = location
-        self.itemCreatedDate.text = createdDate
-        self.itemDescription.text = description
-        self.personEmail.text = email
-        self.personAddress.text = address
-        self.personPhoneNumber.text = phoneNumber
-    }
-
 }
 
 

@@ -10,7 +10,7 @@ import UIKit
 
 protocol NetworkServiceProtocol {
     func getDataAdvertisement(urlString: String, completion: @escaping (Result<Advertisement, Error>) -> Void)
-    func getDataItemDetailed(urlString: String, completion: @escaping (Result<ItemDetailedModel, Error>) -> Void)
+    func getDataItemDetailed(urlString: String, completion: @escaping (Result<ModelItemDetailed, Error>) -> Void)
 }
 
 
@@ -19,7 +19,7 @@ class NetworkService: NetworkServiceProtocol {
     func getDataAdvertisement(urlString: String, completion: @escaping (Result<Advertisement, Error>) -> Void) {
         request(urlString: urlString, completion: completion)
     }
-    func getDataItemDetailed(urlString: String, completion: @escaping (Result<ItemDetailedModel, Error>) -> Void) {
+    func getDataItemDetailed(urlString: String, completion: @escaping (Result<ModelItemDetailed, Error>) -> Void) {
         request(urlString: urlString, completion: completion)
     }
     
